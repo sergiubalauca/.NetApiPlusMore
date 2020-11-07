@@ -16,6 +16,7 @@ namespace HealthAPI.Controllers
     /* enable CORS (3)*/
     [EnableCors("AllowOrigin")]
     [Route("api/[controller]")]
+    [Route("api/[controller]/1")] /*will this work for deleting a student?*/
     [ApiController]
     public class StudentsController : ControllerBase
     {

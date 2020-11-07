@@ -28,11 +28,14 @@ namespace HealthAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SQLWorkshopContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             /* enable CORS (1)*/
-            services.AddCors(allowsites => {
-                allowsites.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            services.AddCors(allowsites =>
+            {
+                allowsites.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,9 +51,12 @@ namespace HealthAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
             /* enable CORS (2)*/
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseMvc();
+            
         }
     }
 }
