@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace HealthAPI.Models
 {
-    public class Students
+    public class Address
     {
         /*[Key] --- make it a key property and the corresponding column to a PrimaryKey column in the database*/
         [Key]
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public DateTime Birthdate { get; set; }
-        public int GroupId { get; set; }
         public int AddressID { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string PostalCode { get; set; }
     }
 }

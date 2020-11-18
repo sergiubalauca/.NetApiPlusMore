@@ -20,5 +20,6 @@ namespace HealthAPI.Context
 
         public DbSet<Students> Students { get; set; }
         public DbSet<Catalog> Catalog { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }
