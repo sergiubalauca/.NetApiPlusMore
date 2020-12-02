@@ -7,6 +7,7 @@ using HealthAPI.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HealthAPI.Controllers
 {
@@ -30,10 +31,22 @@ namespace HealthAPI.Controllers
         }
 
         // GET: api/Addresses/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAddress([FromRoute] string id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //var students = await _context.Students.FindAsync(id);
+            var address = await _context.Addresses.FirstOrDefaultAsync(i => i.AddressID == Int32.Parse(id));
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(address);
         }
 
         // POST: api/Addresses
