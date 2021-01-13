@@ -14,25 +14,25 @@ namespace HealthAPI.Controllers
     [EnableCors("AllowOrigin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ToDo : ControllerBase
+    public class ToDosController : ControllerBase
     {
         private readonly SQLWorkshopContext _context;
 
-        public ToDo(SQLWorkshopContext context)
+        public ToDosController(SQLWorkshopContext context)
         {
             _context = context;
         }
 
-        // GET: api/ToDos
+        // GET: api/Students
         [HttpGet]
-        public IEnumerable<ToDos> Get()
+        public IEnumerable<ToDos> GetToDos()
         {
             return _context.ToDos;
         }
 
-        // GET: api/ToDos/5
+        // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetToDos([FromRoute] string id)
+        public async Task<IActionResult> GetToDos([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -40,31 +40,89 @@ namespace HealthAPI.Controllers
             }
 
             //var students = await _context.Students.FindAsync(id);
-            var todo = await _context.ToDos.FirstOrDefaultAsync(i => i.ToDoID == Int32.Parse(id));
-            if (todo == null)
+            var todos = await _context.ToDos.FirstOrDefaultAsync(i => i.ToDoID == id);
+            if (todos == null)
             {
                 return NotFound();
             }
 
-            return Ok(todo);
+            return Ok(todos);
         }
 
-        // POST: api/ToDos
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/ToDos/5
+        // PUT: api/Students/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutToDos([FromRoute] int id, [FromBody] ToDos todos)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != todos.ToDoID)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(todos).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ToDosExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Students
+        [HttpPost]
+        public async Task<IActionResult> PostToDos([FromBody] ToDos todos)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.ToDos.Add(todos);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetToDos", new { id = todos.ToDoID }, todos);
+        }
+
+        // DELETE: api/Students/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteToDos([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var todos = await _context.ToDos.FindAsync(id);
+            if (todos == null)
+            {
+                return NotFound();
+            }
+
+            _context.ToDos.Remove(todos);
+            await _context.SaveChangesAsync();
+
+            return Ok(todos);
+        }
+
+        private bool ToDosExists(int id)
+        {
+            return _context.ToDos.Any(e => e.ToDoID == id);
         }
     }
 }
