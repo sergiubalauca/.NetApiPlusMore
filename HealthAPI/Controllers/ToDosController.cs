@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HealthAPI.Context;
 using HealthAPI.Models;
+using HealthAPI.Filters;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,14 @@ namespace HealthAPI.Controllers
 
         // GET: api/Students
         [HttpGet]
+        //[Authorize("test")]
         public IEnumerable<ToDos> GetToDos()
         {
+            var test = _context.ToDos.Where(todo => todo.ToDoID == 2).FirstOrDefault();
+            if (test == null)
+            {
+                Console.WriteLine("empty to do");
+            }
             return _context.ToDos;
         }
 

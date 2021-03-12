@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 namespace HealthAPI
 {
@@ -36,6 +37,8 @@ namespace HealthAPI
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +59,20 @@ namespace HealthAPI
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseMvc();
-            
+
+            /*// Enable middleware to serve generated Swagger as a JSON endpoint.
+
+            app.UseSwagger();
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {​​
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Zomato API V1");
+                // To serve SwaggerUI at application's root page, set the RoutePrefix property to an empty string.
+                c.RoutePrefix = string.Empty;
+
+            }​​);*/
+
         }
     }
 }

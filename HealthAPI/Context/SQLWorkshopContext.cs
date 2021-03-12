@@ -22,5 +22,6 @@ namespace HealthAPI.Context
         public DbSet<Catalog> Catalog { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<ToDos> ToDos { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
